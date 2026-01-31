@@ -1,4 +1,4 @@
-# 🎓 Student Assistant Chatbot  
+# Student Assistant Chatbot  
 ### A Domain-Based AI System Using Free APIs
 
 ---
