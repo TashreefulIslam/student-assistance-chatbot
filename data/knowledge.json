@@ -1,0 +1,26 @@
+{
+  "greeting": {
+    "keywords": ["hi", "hello", "hey"],
+    "response": "Hello! I am your Student Assistant Chatbot. How can I help you today?"
+  },
+  "ai_definition": {
+    "keywords": ["ai", "artificial intelligence"],
+    "response": "Artificial Intelligence is the simulation of human intelligence in machines."
+  },
+  "oop_definition": {
+    "keywords": ["oop", "object oriented programming"],
+    "response": "Object-Oriented Programming is a programming paradigm based on objects and classes."
+  },
+  "study_advice": {
+    "keywords": ["study", "exam", "prepare", "gpa"],
+    "response": "Create a structured study plan, practice regularly, and revise consistently."
+  },
+  "subject_recommendation_math": {
+    "keywords": ["weak in math", "math problem"],
+    "response": "If you are weak in math, focus on daily practice and start with fundamental concepts."
+  },
+  "farewell": {
+    "keywords": ["bye", "goodbye"],
+    "response": "Goodbye! Keep learning and improving every day."
+  }
+}
