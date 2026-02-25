@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 let currentConversation = null;
 
 function sendMessage() {
@@ -14,11 +15,28 @@ function sendMessage() {
 
     showTyping();
 
+=======
+function sendMessage() {
+    const inputField = document.getElementById("user-input");
+    const message = inputField.value.trim();
+    const chatBox = document.getElementById("chat-box");
+
+    if (message === "") return;
+
+    // Show user message
+    chatBox.innerHTML += `<div class="message user">${message}</div>`;
+
+    inputField.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Send to backend
+>>>>>>> e924ecdb025ec0f3f9bb5972b9a12357545aac0e
     fetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: message })
     })
+<<<<<<< HEAD
     .then(response => {
         if (!response.ok) {
             throw new Error("Server error");
@@ -112,3 +130,11 @@ function createNewHistoryItem(firstMessage) {
 
     history.prepend(item);
 }
+=======
+    .then(response => response.json())
+    .then(data => {
+        chatBox.innerHTML += `<div class="message bot">${data.reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+}
+>>>>>>> e924ecdb025ec0f3f9bb5972b9a12357545aac0e
