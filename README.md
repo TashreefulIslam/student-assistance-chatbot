@@ -141,3 +141,13 @@ The **Student Assistant Chatbot** is a practical and educational AI project that
 
 ---
 
+## Progress Log
+
+- 2026-02-26: Upgraded frontend UI (Phase 2)
+  - GPT-style chat interface
+  - Collapsible sidebar for conversation history
+  - Typing indicator
+  - Login popup (UI only)
+  - Conversation-based chat history
+  - Send button + Enter key functional
+  - New Chat button functional
