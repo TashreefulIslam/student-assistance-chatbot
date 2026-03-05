@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 let currentConversation = null;
 
 function sendMessage() {
@@ -10,48 +9,42 @@ function sendMessage() {
     addMessage(message, "user");
     if (!currentConversation) {
     createNewHistoryItem(message);
-}
+    }
     inputField.value = "";
 
     showTyping();
 
-=======
-function sendMessage() {
-    const inputField = document.getElementById("user-input");
-    const message = inputField.value.trim();
-    const chatBox = document.getElementById("chat-box");
-
-    if (message === "") return;
-
-    // Show user message
-    chatBox.innerHTML += `<div class="message user">${message}</div>`;
-
-    inputField.value = "";
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    // Send to backend
->>>>>>> e924ecdb025ec0f3f9bb5972b9a12357545aac0e
     fetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: message })
     })
-<<<<<<< HEAD
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Server error");
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
+    setTimeout(() => {
         removeTyping();
         addMessage(data.reply, "bot");
-    })
-    .catch(error => {
+    }, 600);  // 600ms delay for realistic typing
+})
+    .catch(() => {
         removeTyping();
-        addMessage("Server connection failed.", "bot");
-        console.error("Error:", error);
+        addMessage("Error connecting to server.", "bot");
     });
+}
+
+function showTyping() {
+    const chatBox = document.getElementById("chat-box");
+    const typingDiv = document.createElement("div");
+    typingDiv.id = "typing";
+    typingDiv.className = "bg-gray-700 p-3 rounded-xl max-w-xs animate-pulse";
+    typingDiv.innerText = "Typing...";
+    chatBox.appendChild(typingDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function removeTyping() {
+    const typing = document.getElementById("typing");
+    if (typing) typing.remove();
 }
 
 function addMessage(text, sender) {
@@ -80,29 +73,12 @@ function openLogin() {
 function closeLogin() {
     document.getElementById("loginModal").classList.add("hidden");
 }
-
 document.getElementById("user-input")
 .addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
         sendMessage();
     }
 });
-
-function showTyping() {
-    const chatBox = document.getElementById("chat-box");
-    const typingDiv = document.createElement("div");
-    typingDiv.id = "typing";
-    typingDiv.className = "bg-gray-700 p-3 rounded-xl max-w-xs animate-pulse";
-    typingDiv.innerText = "Typing...";
-    chatBox.appendChild(typingDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-    
-}
-
-function removeTyping() {
-    const typing = document.getElementById("typing");
-    if (typing) typing.remove();
-}
 
 function newChat() {
     document.getElementById("chat-box").innerHTML = "";
@@ -130,11 +106,3 @@ function createNewHistoryItem(firstMessage) {
 
     history.prepend(item);
 }
-=======
-    .then(response => response.json())
-    .then(data => {
-        chatBox.innerHTML += `<div class="message bot">${data.reply}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    });
-}
->>>>>>> e924ecdb025ec0f3f9bb5972b9a12357545aac0e
