@@ -151,3 +151,5 @@ The **Student Assistant Chatbot** is a practical and educational AI project that
   - Conversation-based chat history
   - Send button + Enter key functional
   - New Chat button functional
+- 2026-03-05
+  - Integrated API
