@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-gray-900 text-white">
+
+<!-- Navigation -->
+<nav class="bg-black bg-opacity-40 backdrop-blur-lg border-b border-gray-700 p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">🎓 Admin Dashboard</h1>
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">Logout</button>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto p-6">
+    <!-- Tabs -->
+    <div class="flex gap-4 mb-6 flex-wrap">
+        <button onclick="switchTab('exams')" id="exams-tab" class="tab-btn active bg-indigo-600 px-6 py-2 rounded-lg">📚 Exam Routines</button>
+        <button onclick="switchTab('classes')" id="classes-tab" class="tab-btn bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg">📅 Class Routines</button>
+        <button onclick="switchTab('teachers')" id="teachers-tab" class="tab-btn bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg">👨‍🏫 Teachers</button>
+        <button onclick="switchTab('cts')" id="cts-tab" class="tab-btn bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg">✏️ CT Details</button>
+    </div>
+
+    <!-- Exam Routines Tab -->
+    <div id="exams-content" class="tab-content">
+        <div class="bg-black bg-opacity-40 backdrop-blur-lg rounded-xl p-6 border border-gray-700">
+            <h2 class="text-2xl font-bold mb-6">Exam Routines Management</h2>
+            
+            <button onclick="toggleExamForm()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded mb-6">+ Add Exam</button>
+            
+            <div id="examForm" class="hidden mb-6 p-4 bg-gray-800 rounded-lg">
+                <h3 class="text-xl font-bold mb-4">Add New Exam Routine</h3>
+                <form id="examFormElement" onsubmit="submitExamForm(event)" class="grid grid-cols-2 gap-4">
+                    <input type="text" name="semester" placeholder="Semester (e.g., Fall 2025)" required class="bg-gray-700 p-2 rounded">
+                    <select name="exam_type" required class="bg-gray-700 p-2 rounded">
+                        <option value="">Select Exam Type</option>
+                        <option value="Mid">Mid</option>
+                        <option value="Final">Final</option>
+                        <option value="Term Final">Term Final</option>
+                    </select>
+                    <input type="text" name="section" placeholder="Section (e.g., 7C)" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="course_code" placeholder="Course Code (e.g., CSE4111)" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="course_name" placeholder="Course Name" required class="bg-gray-700 p-2 rounded">
+                    <input type="date" name="date" required class="bg-gray-700 p-2 rounded">
+                    <input type="time" name="time" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="room" placeholder="Room Number" required class="bg-gray-700 p-2 rounded">
+                    <input type="number" name="duration_minutes" placeholder="Duration (minutes)" value="60" class="bg-gray-700 p-2 rounded">
+                    <button type="submit" class="col-span-2 bg-indigo-600 hover:bg-indigo-700 p-2 rounded">Create Exam</button>
+                </form>
+            </div>
+
+            <!-- Exams Table -->
+            <div id="examsList" class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-600">
+                            <th class="text-left p-2">Semester</th>
+                            <th class="text-left p-2">Type</th>
+                            <th class="text-left p-2">Section</th>
+                            <th class="text-left p-2">Course</th>
+                            <th class="text-left p-2">Date</th>
+                            <th class="text-left p-2">Time</th>
+                            <th class="text-left p-2">Room</th>
+                            <th class="text-left p-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="examsTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Routines Tab -->
+    <div id="classes-content" class="tab-content hidden">
+        <div class="bg-black bg-opacity-40 backdrop-blur-lg rounded-xl p-6 border border-gray-700">
+            <h2 class="text-2xl font-bold mb-6">Class Routines Management</h2>
+            
+            <button onclick="toggleClassForm()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded mb-6">+ Add Class</button>
+            
+            <div id="classForm" class="hidden mb-6 p-4 bg-gray-800 rounded-lg">
+                <h3 class="text-xl font-bold mb-4">Add New Class Routine</h3>
+                <form id="classFormElement" onsubmit="submitClassForm(event)" class="grid grid-cols-2 gap-4">
+                    <input type="text" name="semester" placeholder="Semester" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="section" placeholder="Section" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="course_code" placeholder="Course Code" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="course_name" placeholder="Course Name" required class="bg-gray-700 p-2 rounded">
+                    <select name="day" required class="bg-gray-700 p-2 rounded">
+                        <option value="">Select Day</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                    </select>
+                    <input type="time" name="start_time" required class="bg-gray-700 p-2 rounded">
+                    <input type="time" name="end_time" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="room" placeholder="Room" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="teacher_name" placeholder="Teacher Name" class="bg-gray-700 p-2 rounded">
+                    <button type="submit" class="col-span-2 bg-indigo-600 hover:bg-indigo-700 p-2 rounded">Create Class</button>
+                </form>
+            </div>
+
+            <!-- Classes Table -->
+            <div id="classList" class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-600">
+                            <th class="text-left p-2">Semester</th>
+                            <th class="text-left p-2">Section</th>
+                            <th class="text-left p-2">Course</th>
+                            <th class="text-left p-2">Day</th>
+                            <th class="text-left p-2">Time</th>
+                            <th class="text-left p-2">Room</th>
+                            <th class="text-left p-2">Teacher</th>
+                            <th class="text-left p-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classesTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teachers Tab -->
+    <div id="teachers-content" class="tab-content hidden">
+        <div class="bg-black bg-opacity-40 backdrop-blur-lg rounded-xl p-6 border border-gray-700">
+            <h2 class="text-2xl font-bold mb-6">Teachers Management</h2>
+            
+            <button onclick="toggleTeacherForm()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded mb-6">+ Add Teacher</button>
+            
+            <div id="teacherForm" class="hidden mb-6 p-4 bg-gray-800 rounded-lg">
+                <h3 class="text-xl font-bold mb-4">Create Teacher Account</h3>
+                <form id="teacherFormElement" onsubmit="submitTeacherForm(event)" class="grid grid-cols-2 gap-4">
+                    <input type="email" name="email" placeholder="Email" required class="bg-gray-700 p-2 rounded">
+                    <input type="password" name="password" placeholder="Password" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="full_name" placeholder="Full Name" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="teacher_id" placeholder="Teacher ID" class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="department" placeholder="Department" class="bg-gray-700 p-2 rounded">
+                    <button type="submit" class="col-span-2 bg-indigo-600 hover:bg-indigo-700 p-2 rounded">Create Teacher</button>
+                </form>
+            </div>
+
+            <!-- Teachers Table -->
+            <div id="teachersList" class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-600">
+                            <th class="text-left p-2">Name</th>
+                            <th class="text-left p-2">Email</th>
+                            <th class="text-left p-2">Teacher ID</th>
+                            <th class="text-left p-2">Department</th>
+                            <th class="text-left p-2">Status</th>
+                            <th class="text-left p-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teachersTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTs Tab -->
+    <div id="cts-content" class="tab-content hidden">
+        <div class="bg-black bg-opacity-40 backdrop-blur-lg rounded-xl p-6 border border-gray-700">
+            <h2 class="text-2xl font-bold mb-6">CT Details Management</h2>
+            
+            <button onclick="toggleCTForm()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded mb-6">+ Add CT</button>
+            
+            <div id="ctForm" class="hidden mb-6 p-4 bg-gray-800 rounded-lg">
+                <h3 class="text-xl font-bold mb-4">Add CT Details</h3>
+                <form id="ctFormElement" onsubmit="submitCTForm(event)" class="grid grid-cols-2 gap-4">
+                    <input type="text" name="course_code" placeholder="Course Code" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="course_name" placeholder="Course Name" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="section" placeholder="Section" required class="bg-gray-700 p-2 rounded">
+                    <input type="number" name="ct_number" placeholder="CT Number" required class="bg-gray-700 p-2 rounded">
+                    <input type="date" name="date" required class="bg-gray-700 p-2 rounded">
+                    <input type="time" name="time" required class="bg-gray-700 p-2 rounded">
+                    <input type="number" name="duration_minutes" placeholder="Duration (minutes)" value="30" class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="room" placeholder="Room" class="bg-gray-700 p-2 rounded">
+                    <textarea name="topics_syllabus" placeholder="Topics/Syllabus" class="col-span-2 bg-gray-700 p-2 rounded"></textarea>
+                    <input type="number" name="total_marks" placeholder="Total Marks" value="20" class="bg-gray-700 p-2 rounded">
+                    <button type="submit" class="col-span-2 bg-indigo-600 hover:bg-indigo-700 p-2 rounded">Create CT</button>
+                </form>
+            </div>
+
+            <!-- CTs Table -->
+            <div id="ctsList" class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-600">
+                            <th class="text-left p-2">Course</th>
+                            <th class="text-left p-2">Section</th>
+                            <th class="text-left p-2">CT #</th>
+                            <th class="text-left p-2">Date</th>
+                            <th class="text-left p-2">Time</th>
+                            <th class="text-left p-2">Room</th>
+                            <th class="text-left p-2">Marks</th>
+                            <th class="text-left p-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ctsTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function switchTab(tabName) {
+    // Hide all content
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('bg-indigo-600'));
+    
+    // Show selected content
+    document.getElementById(tabName + '-content').classList.remove('hidden');
+    document.getElementById(tabName + '-tab').classList.add('bg-indigo-600');
+    
+    // Load data
+    if (tabName === 'exams') loadExams();
+    else if (tabName === 'classes') loadClasses();
+    else if (tabName === 'teachers') loadTeachers();
+    else if (tabName === 'cts') loadCTs();
+}
+
+// Toggle forms
+function toggleExamForm() { document.getElementById('examForm').classList.toggle('hidden'); }
+function toggleClassForm() { document.getElementById('classForm').classList.toggle('hidden'); }
+function toggleTeacherForm() { document.getElementById('teacherForm').classList.toggle('hidden'); }
+function toggleCTForm() { document.getElementById('ctForm').classList.toggle('hidden'); }
+
+// Load data functions
+async function loadExams() {
+    try {
+        const response = await fetch('/api/admin/exam-routines');
+        const data = await response.json();
+        
+        const tbody = document.getElementById('examsTableBody');
+        tbody.innerHTML = '';
+        
+        if (data.success && data.data) {
+            data.data.forEach(exam => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-600">
+                        <td class="p-2">${exam.semester}</td>
+                        <td class="p-2">${exam.exam_type}</td>
+                        <td class="p-2">${exam.section}</td>
+                        <td class="p-2">${exam.course_code}</td>
+                        <td class="p-2">${exam.date}</td>
+                        <td class="p-2">${exam.time}</td>
+                        <td class="p-2">${exam.room}</td>
+                        <td class="p-2">
+                            <button onclick="deleteExam(${exam.id})" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-sm">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error('Error loading exams:', error);
+    }
+}
+
+// Submit forms
+async function submitExamForm(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    
+    try {
+        const response = await fetch('/api/admin/exam-routines', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            alert('Exam routine created successfully');
+            event.target.reset();
+            document.getElementById('examForm').classList.add('hidden');
+            loadExams();
+        } else {
+            alert('Error: ' + result.message);
+        }
+    } catch (error) {
+        alert('Connection error');
+    }
+}
+
+// Delete functions
+async function deleteExam(id) {
+    if (!confirm('Are you sure?')) return;
+    
+    try {
+        const response = await fetch(`/api/admin/exam-routines/${id}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.success) {
+            loadExams();
+        }
+    } catch (error) {
+        alert('Delete error');
+    }
+}
+
+// Similar functions for classes, teachers, etc...
+async function loadClasses() {
+    try {
+        const response = await fetch('/api/admin/class-routines');
+        const data = await response.json();
+        const tbody = document.getElementById('classesTableBody');
+        tbody.innerHTML = '';
+        
+        if (data.success && data.data) {
+            data.data.forEach(cls => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-600">
+                        <td class="p-2">${cls.semester}</td>
+                        <td class="p-2">${cls.section}</td>
+                        <td class="p-2">${cls.course_code}</td>
+                        <td class="p-2">${cls.day}</td>
+                        <td class="p-2">${cls.start_time}-${cls.end_time}</td>
+                        <td class="p-2">${cls.room}</td>
+                        <td class="p-2">${cls.teacher_name || 'N/A'}</td>
+                        <td class="p-2">
+                            <button onclick="deleteClass(${cls.id})" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-sm">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error('Error loading classes:', error);
+    }
+}
+
+async function loadTeachers() {
+    try {
+        const response = await fetch('/api/admin/teachers');
+        const data = await response.json();
+        const tbody = document.getElementById('teachersTableBody');
+        tbody.innerHTML = '';
+        
+        if (data.success && data.data) {
+            data.data.forEach(teacher => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-600">
+                        <td class="p-2">${teacher.full_name}</td>
+                        <td class="p-2">${teacher.email}</td>
+                        <td class="p-2">${teacher.teacher_id || 'N/A'}</td>
+                        <td class="p-2">${teacher.department || 'N/A'}</td>
+                        <td class="p-2">${teacher.is_active ? 'Active' : 'Inactive'}</td>
+                        <td class="p-2">
+                            <button onclick="deleteTeacher(${teacher.id})" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-sm">Deactivate</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error('Error loading teachers:', error);
+    }
+}
+
+async function loadCTs() {
+    try {
+        const response = await fetch('/api/admin/ct-details');
+        const data = await response.json();
+        const tbody = document.getElementById('ctsTableBody');
+        tbody.innerHTML = '';
+        
+        if (data.success && data.data) {
+            data.data.forEach(ct => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-600">
+                        <td class="p-2">${ct.course_code}</td>
+                        <td class="p-2">${ct.section}</td>
+                        <td class="p-2">${ct.ct_number}</td>
+                        <td class="p-2">${ct.date}</td>
+                        <td class="p-2">${ct.time}</td>
+                        <td class="p-2">${ct.room || 'N/A'}</td>
+                        <td class="p-2">${ct.total_marks}</td>
+                        <td class="p-2">
+                            <button onclick="deleteCT(${ct.id})" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-sm">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error('Error loading CTs:', error);
+    }
+}
+
+async function submitClassForm(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    
+    try {
+        const response = await fetch('/api/admin/class-routines', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.success) {
+            alert('Class routine created');
+            event.target.reset();
+            document.getElementById('classForm').classList.add('hidden');
+            loadClasses();
+        }
+    } catch (error) {
+        alert('Error creating class');
+    }
+}
+
+async function submitTeacherForm(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    
+    try {
+        const response = await fetch('/api/admin/teachers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.success) {
+            alert('Teacher account created');
+            event.target.reset();
+            document.getElementById('teacherForm').classList.add('hidden');
+            loadTeachers();
+        } else {
+            alert('Error: ' + result.message);
+        }
+    } catch (error) {
+        alert('Error creating teacher');
+    }
+}
+
+async function submitCTForm(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    
+    try {
+        const response = await fetch('/api/admin/ct-details', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.success) {
+            alert('CT details created');
+            event.target.reset();
+            document.getElementById('ctForm').classList.add('hidden');
+            loadCTs();
+        }
+    } catch (error) {
+        alert('Error creating CT');
+    }
+}
+
+async function deleteClass(id) {
+    if (!confirm('Delete this class routine?')) return;
+    try {
+        const response = await fetch(`/api/admin/class-routines/${id}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.success) loadClasses();
+    } catch (error) {
+        alert('Delete error');
+    }
+}
+
+async function deleteTeacher(id) {
+    if (!confirm('Deactivate this teacher?')) return;
+    try {
+        const response = await fetch(`/api/admin/teachers/${id}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.success) loadTeachers();
+    } catch (error) {
+        alert('Delete error');
+    }
+}
+
+async function deleteCT(id) {
+    if (!confirm('Delete this CT?')) return;
+    try {
+        const response = await fetch(`/api/admin/ct-details/${id}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.success) loadCTs();
+    } catch (error) {
+        alert('Delete error');
+    }
+}
+
+async function logout() {
+    window.location.href = '/logout';
+}
+
+// Load exams on page load
+loadExams();
+</script>
+
+</body>
+</html>
