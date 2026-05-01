@@ -12,9 +12,9 @@
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-bold">Chats</h2>
     </div>
-<button onclick="newChat()" class="w-full bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg mb-4">
-    + New Chat
-</button>
+    <button onclick="newChat()" class="w-full bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg mb-4">
+        + New Chat
+    </button>
     <div id="history" class="space-y-2 text-sm text-gray-300">
         <div class="p-2 hover:bg-gray-700 rounded cursor-pointer">Previous Chat 1</div>
     </div>
@@ -26,23 +26,42 @@
     <!-- Top Bar -->
     <div class="flex justify-between items-center p-4 border-b border-gray-700 bg-black bg-opacity-30 backdrop-blur-md">
 
-    <div class="flex items-center space-x-3">
-        <button onclick="toggleSidebar()" 
-                class="text-gray-300 hover:text-white text-xl">
-            ☰
-        </button>
-        <h1 class="text-lg font-semibold">🎓 Student Assistant AI</h1>
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleSidebar()" 
+                    class="text-gray-300 hover:text-white text-xl">
+                ☰
+            </button>
+            <h1 class="text-lg font-semibold">🎓 Student Assistant AI</h1>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <button id="userButton" onclick="toggleUserMenu()" class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded text-sm">
+                👤 Guest
+            </button>
+            <div id="userMenu" class="hidden absolute top-14 right-4 bg-gray-800 rounded-lg shadow-lg z-50 min-w-48">
+                <a href="/login" class="block px-4 py-2 hover:bg-gray-700 rounded-t-lg">Login</a>
+                <button id="logoutBtn" class="hidden w-full text-left px-4 py-2 hover:bg-gray-700">Logout</button>
+                <button id="profileBtn" class="hidden w-full text-left px-4 py-2 hover:bg-gray-700">Profile</button>
+                <a href="/admin/dashboard" id="adminLink" class="hidden block px-4 py-2 hover:bg-gray-700">Admin Dashboard</a>
+                <a href="/teacher/dashboard" id="teacherLink" class="hidden block px-4 py-2 hover:bg-gray-700 rounded-b-lg">Teacher Dashboard</a>
+            </div>
+        </div>
+
     </div>
-
-    <button onclick="openLogin()" 
-            class="bg-white text-black px-4 py-1 rounded-lg hover:bg-gray-200">
-        Login
-    </button>
-
-</div>
 
     <!-- Chat Messages -->
     <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <div class="bg-gray-700 bg-opacity-30 p-4 rounded-lg">
+            <p class="text-gray-300">Welcome to Student Assistant AI! 🎓</p>
+            <p class="text-gray-400 text-sm mt-2">Ask me about:</p>
+            <ul class="text-gray-400 text-sm mt-2 ml-4 list-disc">
+                <li>📚 Exam Routine & Schedules</li>
+                <li>📅 Class Routine & Timetables</li>
+                <li>✏️ Class Tests (CT) & Topics</li>
+                <li>📝 Assignment Deadlines</li>
+                <li>💡 General Academic Help</li>
+            </ul>
+        </div>
     </div>
 
     <!-- Input Area -->
@@ -55,25 +74,14 @@
 
             <input type="text" id="user-input"
                    placeholder="Message Student Assistant..."
-                   class="flex-1 bg-transparent focus:outline-none text-white">
+                   class="flex-1 bg-transparent focus:outline-none text-white"
+                   onkeypress="if(event.key === 'Enter') sendMessage()">
 
             <button onclick="sendMessage()"
                     class="ml-2 bg-indigo-600 hover:bg-indigo-700 px-4 py-1 rounded-full">
                 ➤
             </button>
         </div>
-    </div>
-</div>
-
-<!-- Login Modal -->
-<div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-    <div class="bg-white text-black p-6 rounded-xl w-80">
-        <h2 class="text-lg font-bold mb-4">Login</h2>
-        <input type="text" placeholder="Username" class="w-full mb-3 p-2 border rounded">
-        <input type="password" placeholder="Password" class="w-full mb-3 p-2 border rounded">
-        <button onclick="closeLogin()" class="w-full bg-indigo-600 text-white p-2 rounded">
-            Login
-        </button>
     </div>
 </div>
 
