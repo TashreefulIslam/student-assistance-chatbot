@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-gray-900 text-white">
+
+<!-- Navigation -->
+<nav class="bg-black bg-opacity-40 backdrop-blur-lg border-b border-gray-700 p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">👨‍🏫 Teacher Dashboard</h1>
+        <div class="flex gap-4">
+            <span id="teacherName" class="text-indigo-300"></span>
+            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">Logout</button>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto p-6">
+    <!-- Tabs -->
+    <div class="flex gap-4 mb-6 flex-wrap">
+        <button onclick="switchTab('cts')" id="cts-tab" class="tab-btn active bg-indigo-600 px-6 py-2 rounded-lg">✏️ Class Tests</button>
+        <button onclick="switchTab('assignments')" id="assignments-tab" class="tab-btn bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg">📝 Assignments</button>
+        <button onclick="switchTab('profile')" id="profile-tab" class="tab-btn bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg">👤 Profile</button>
+    </div>
+
+    <!-- CTs Tab -->
+    <div id="cts-content" class="tab-content">
+        <div class="bg-black bg-opacity-40 backdrop-blur-lg rounded-xl p-6 border border-gray-700">
+            <h2 class="text-2xl font-bold mb-6">Class Tests Management</h2>
+            
+            <button onclick="toggleCTForm()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded mb-6">+ Add CT</button>
+            
+            <div id="ctForm" class="hidden mb-6 p-4 bg-gray-800 rounded-lg">
+                <h3 class="text-xl font-bold mb-4">Add New CT Details</h3>
+                <form id="ctFormElement" onsubmit="submitCTForm(event)" class="grid grid-cols-2 gap-4">
+                    <input type="text" name="course_code" placeholder="Course Code (e.g., CSE4111)" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="course_name" placeholder="Course Name" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="section" placeholder="Section (e.g., 7C)" required class="bg-gray-700 p-2 rounded">
+                    <input type="number" name="ct_number" placeholder="CT Number" required class="bg-gray-700 p-2 rounded">
+                    <input type="date" name="date" required class="bg-gray-700 p-2 rounded">
+                    <input type="time" name="time" required class="bg-gray-700 p-2 rounded">
+                    <input type="number" name="duration_minutes" placeholder="Duration (minutes)" value="30" class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="room" placeholder="Room Number" class="bg-gray-700 p-2 rounded">
+                    <textarea name="topics_syllabus" placeholder="Topics/Syllabus to cover" class="col-span-2 bg-gray-700 p-2 rounded"></textarea>
+                    <input type="number" name="total_marks" placeholder="Total Marks" value="20" class="bg-gray-700 p-2 rounded">
+                    <button type="submit" class="col-span-2 bg-indigo-600 hover:bg-indigo-700 p-2 rounded">Create CT</button>
+                </form>
+            </div>
+
+            <!-- CTs Table -->
+            <div id="ctsList" class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-600">
+                            <th class="text-left p-2">Course</th>
+                            <th class="text-left p-2">Section</th>
+                            <th class="text-left p-2">CT #</th>
+                            <th class="text-left p-2">Date</th>
+                            <th class="text-left p-2">Time</th>
+                            <th class="text-left p-2">Room</th>
+                            <th class="text-left p-2">Topics</th>
+                            <th class="text-left p-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ctsTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assignments Tab -->
+    <div id="assignments-content" class="tab-content hidden">
+        <div class="bg-black bg-opacity-40 backdrop-blur-lg rounded-xl p-6 border border-gray-700">
+            <h2 class="text-2xl font-bold mb-6">Assignments Management</h2>
+            
+            <button onclick="toggleAssignmentForm()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded mb-6">+ Add Assignment</button>
+            
+            <div id="assignmentForm" class="hidden mb-6 p-4 bg-gray-800 rounded-lg">
+                <h3 class="text-xl font-bold mb-4">Add New Assignment</h3>
+                <form id="assignmentFormElement" onsubmit="submitAssignmentForm(event)" class="grid grid-cols-2 gap-4">
+                    <input type="text" name="course_code" placeholder="Course Code" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="course_name" placeholder="Course Name" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="section" placeholder="Section" required class="bg-gray-700 p-2 rounded">
+                    <input type="text" name="assignment_title" placeholder="Assignment Title" required class="bg-gray-700 p-2 rounded">
+                    <input type="datetime-local" name="submission_deadline" required class="bg-gray-700 p-2 rounded">
+                    <input type="number" name="total_marks" placeholder="Total Marks" value="10" class="bg-gray-700 p-2 rounded">
+                    <textarea name="description" placeholder="Assignment Description" class="col-span-2 bg-gray-700 p-2 rounded"></textarea>
+                    <button type="submit" class="col-span-2 bg-indigo-600 hover:bg-indigo-700 p-2 rounded">Create Assignment</button>
+                </form>
+            </div>
+
+            <!-- Assignments Table -->
+            <div id="assignmentsList" class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-600">
+                            <th class="text-left p-2">Title</th>
+                            <th class="text-left p-2">Course</th>
+                            <th class="text-left p-2">Section</th>
+                            <th class="text-left p-2">Deadline</th>
+                            <th class="text-left p-2">Marks</th>
+                            <th class="text-left p-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assignmentsTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div id="profile-content" class="tab-content hidden">
+        <div class="bg-black bg-opacity-40 backdrop-blur-lg rounded-xl p-6 border border-gray-700 max-w-2xl">
+            <h2 class="text-2xl font-bold mb-6">Profile Settings</h2>
+            
+            <form id="profileForm" onsubmit="submitProfileForm(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Full Name</label>
+                    <input type="text" id="profileFullName" name="full_name" class="w-full bg-gray-700 p-2 rounded">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Email</label>
+                    <input type="email" id="profileEmail" name="email" class="w-full bg-gray-700 p-2 rounded">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Department</label>
+                    <input type="text" id="profileDepartment" name="department" class="w-full bg-gray-700 p-2 rounded">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">New Password (leave empty to keep current)</label>
+                    <input type="password" name="password" class="w-full bg-gray-700 p-2 rounded">
+                </div>
+                
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('bg-indigo-600'));
+    
+    document.getElementById(tabName + '-content').classList.remove('hidden');
+    document.getElementById(tabName + '-tab').classList.add('bg-indigo-600');
+    
+    if (tabName === 'cts') loadCTs();
+    else if (tabName === 'assignments') loadAssignments();
+    else if (tabName === 'profile') loadProfile();
+}
+
+function toggleCTForm() { document.getElementById('ctForm').classList.toggle('hidden'); }
+function toggleAssignmentForm() { document.getElementById('assignmentForm').classList.toggle('hidden'); }
+
+async function loadCTs() {
+    try {
+        const response = await fetch('/api/teacher/ct');
+        const data = await response.json();
+        const tbody = document.getElementById('ctsTableBody');
+        tbody.innerHTML = '';
+        
+        if (data.success && data.data) {
+            data.data.forEach(ct => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-600">
+                        <td class="p-2">${ct.course_code}</td>
+                        <td class="p-2">${ct.section}</td>
+                        <td class="p-2">${ct.ct_number}</td>
+                        <td class="p-2">${ct.date}</td>
+                        <td class="p-2">${ct.time}</td>
+                        <td class="p-2">${ct.room || 'N/A'}</td>
+                        <td class="p-2">${ct.topics_syllabus ? ct.topics_syllabus.substring(0, 30) + '...' : 'N/A'}</td>
+                        <td class="p-2">
+                            <button onclick="deleteCT(${ct.id})" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-sm">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error('Error loading CTs:', error);
+    }
+}
+
+async function loadAssignments() {
+    try {
+        const response = await fetch('/api/teacher/assignment');
+        const data = await response.json();
+        const tbody = document.getElementById('assignmentsTableBody');
+        tbody.innerHTML = '';
+        
+        if (data.success && data.data) {
+            data.data.forEach(assign => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-600">
+                        <td class="p-2">${assign.assignment_title}</td>
+                        <td class="p-2">${assign.course_code}</td>
+                        <td class="p-2">${assign.section}</td>
+                        <td class="p-2">${assign.submission_deadline}</td>
+                        <td class="p-2">${assign.total_marks}</td>
+                        <td class="p-2">
+                            <button onclick="deleteAssignment(${assign.id})" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-sm">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error('Error loading assignments:', error);
+    }
+}
+
+async function loadProfile() {
+    try {
+        const response = await fetch('/api/teacher/profile');
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('profileFullName').value = data.data.full_name;
+            document.getElementById('profileEmail').value = data.data.email;
+            document.getElementById('profileDepartment').value = data.data.department || '';
+            document.getElementById('teacherName').textContent = data.data.full_name;
+        }
+    } catch (error) {
+        console.error('Error loading profile:', error);
+    }
+}
+
+async function submitCTForm(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    
+    try {
+        const response = await fetch('/api/teacher/ct', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            alert('CT created successfully');
+            event.target.reset();
+            document.getElementById('ctForm').classList.add('hidden');
+            loadCTs();
+        } else {
+            alert('Error: ' + result.message);
+        }
+    } catch (error) {
+        alert('Connection error');
+    }
+}
+
+async function submitAssignmentForm(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    
+    try {
+        const response = await fetch('/api/teacher/assignment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            alert('Assignment created successfully');
+            event.target.reset();
+            document.getElementById('assignmentForm').classList.add('hidden');
+            loadAssignments();
+        } else {
+            alert('Error: ' + result.message);
+        }
+    } catch (error) {
+        alert('Connection error');
+    }
+}
+
+async function submitProfileForm(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    
+    // Remove empty password field
+    if (!data.password) delete data.password;
+    
+    try {
+        const response = await fetch('/api/teacher/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            alert('Profile updated successfully');
+            loadProfile();
+        } else {
+            alert('Error: ' + result.message);
+        }
+    } catch (error) {
+        alert('Connection error');
+    }
+}
+
+async function deleteCT(id) {
+    if (!confirm('Delete this CT?')) return;
+    try {
+        const response = await fetch(`/api/teacher/ct/${id}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.success) loadCTs();
+    } catch (error) {
+        alert('Delete error');
+    }
+}
+
+async function deleteAssignment(id) {
+    if (!confirm('Delete this assignment?')) return;
+    try {
+        const response = await fetch(`/api/teacher/assignment/${id}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.success) loadAssignments();
+    } catch (error) {
+        alert('Delete error');
+    }
+}
+
+async function logout() {
+    window.location.href = '/logout';
+}
+
+// Load profile on page load
+loadProfile();
+loadCTs();
+</script>
+
+</body>
+</html>
